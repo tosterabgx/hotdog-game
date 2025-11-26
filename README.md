@@ -5,7 +5,7 @@ Snapchat-like game made using opencv and mediapipe 🌭
 ## Installation & Usage
 
 > [!IMPORTANT]  
-> Python 3.12 or else is required
+> Python 3.12 or less is required
 
 1. Clone the repo
    ```sh
