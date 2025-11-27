@@ -1,14 +1,24 @@
 import numpy as np
 
 
-def is_correct_gesture(hand_landmarks):
-    lm = hand_landmarks.landmark
+def is_finger_closed(lm, origin_id, finger_tip_id):
+    origin = np.array([lm[origin_id].x, lm[origin_id].y])
+    tip = np.array([lm[finger_tip_id].x, lm[finger_tip_id].y])
+    crease = np.array([lm[finger_tip_id - 2].x, lm[finger_tip_id - 2].y])
 
-    index_tip = np.array([lm[8].x, lm[8].y])
-    thumb_tip = np.array([lm[4].x, lm[4].y])
-    index_mcp = np.array([lm[6].x, lm[6].y])
-    d_tip_tip = np.linalg.norm(index_tip - thumb_tip)
-    d_thumb_crease = np.linalg.norm(index_mcp - thumb_tip)
+    d_origin_tip = np.linalg.norm(tip - origin)
+    d_origin_crease = np.linalg.norm(crease - origin)
 
-    ratio = d_tip_tip / (d_thumb_crease + 1e-6)
-    return ratio < 0.8
+    ratio = d_origin_tip / (d_origin_crease + 1e-6)
+    return ratio < 0.975
+
+
+def are_fingers_closed(lm):
+    return is_finger_closed(lm, 0, 20) \
+        and is_finger_closed(lm, 0, 16) \
+        and is_finger_closed(lm, 0, 12)
+
+
+def is_correct_gesture(hand):
+    lm = hand.landmark
+    return is_finger_closed(lm, 4, 8) and are_fingers_closed(lm)
