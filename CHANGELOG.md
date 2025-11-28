@@ -23,3 +23,6 @@ Added recognition of correct gesture. For now, it works not from all angles
 
 Added CHANGELOG.md + 3D tracking for index finger + mouth recognition
 
+### 29-11-2025
+
+Added hotdogs in hands when they have correct gesture
