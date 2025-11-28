@@ -13,6 +13,7 @@ def is_finger_closed(lm, origin_id, finger_tip_id, use_3d=False):
 
     d_origin_tip = np.linalg.norm(tip - origin)
     d_origin_crease = np.linalg.norm(crease - origin)
+
     ratio = d_origin_tip / (d_origin_crease + 1e-6)
     return ratio < 0.975
 
@@ -26,3 +27,17 @@ def are_fingers_closed(lm):
 def is_correct_gesture(hand):
     lm = hand.landmark
     return is_finger_closed(lm, 4, 8, True) and are_fingers_closed(lm)
+
+
+def is_mouth_open(face):
+    lm = face.landmark
+
+    upper_lip_top = 0
+    upper_lip_bottom = 13
+    bottom_lip_top = 14
+
+    upper_lip_size = abs(lm[upper_lip_top].y - lm[upper_lip_bottom].y)
+    mouth_size = abs(lm[upper_lip_bottom].y - lm[bottom_lip_top].y)
+
+    ratio = upper_lip_size / (mouth_size + 1e-6)
+    return ratio < 0.975
