@@ -14,3 +14,6 @@ Added technical files + basic hands recognition
 ### 27-11-2025
 Added recognition of correct gesture. For now, it works not from all angles
 
+### 28-11-2025
+CHANGELOG.md added
+
