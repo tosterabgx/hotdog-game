@@ -1,11 +1,13 @@
-# Eat hot dogs!
+# Eat hotdogs!
+
 Snapchat-like game made using opencv and mediapipe 🌭
 
+> Work in progress
 
 ## Installation & Usage
 
 > [!IMPORTANT]  
-> Python 3.8 to 3.11 is required
+> Python 3.8 to 3.11 is required (mediapipe issue)
 
 1. Clone the repo
    ```sh
