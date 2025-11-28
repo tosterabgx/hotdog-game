@@ -1,6 +1,8 @@
 # Eat hotdogs!
 
-Snapchat-like game made using opencv and mediapipe 🌭
+**Snapchat-like game made using opencv and mediapipe 🌭**
+
+Game for a party - who eats more hotdogs?
 
 > Work in progress
 
@@ -11,7 +13,7 @@ Snapchat-like game made using opencv and mediapipe 🌭
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/tosterabgx/hotdog-game.git && cd pokemoneus
+   git clone https://github.com/tosterabgx/hotdog-game.git && cd hotdog-game
    ```
 2. Create a venv and activate it
    ```sh

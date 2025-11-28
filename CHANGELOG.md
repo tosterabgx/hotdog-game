@@ -3,9 +3,11 @@
 - [x] Recognize correct gestures
     - [ ] Do it consistently
 - [x] Recognize open mouth
-- [ ] Put hotdogs in hands
-- [ ] Make hotdogs edible
+- [ ] Put hotdogs in hands (DEADLINE: 05-12-2025)
+- [ ] Make hotdogs edible (DEADLINE: 05-12-2025)
+- [ ] Add multiple players mode
 - [ ] Add scoreboard
+- [ ] Add tutorial
 
 ## Changelog
 
