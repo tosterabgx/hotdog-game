@@ -3,7 +3,7 @@ import mediapipe as mp
 import numpy as np
 
 from recognizer import is_correct_gesture, is_mouth_open
-from utilities import insert_image
+from utilities import insert_image_in_hand
 
 hotdog_image = cv2.imread("../assets/hotdog.png", cv2.IMREAD_UNCHANGED)
 hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
@@ -53,12 +53,7 @@ while cap.isOpened():
             # mp.solutions.drawing_utils.draw_landmarks(flipped_rgb, hand, mp.solutions.hands.HAND_CONNECTIONS)
 
             if is_correct_gesture(hand):
-                lm = hand.landmark
-
-                x = int(lm[0].x * flipped_rgb.shape[1])
-                y = int(lm[0].y * flipped_rgb.shape[0])
-
-                flipped_rgb = insert_image(flipped_rgb, hotdog_image, x, y)
+                flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_image, hand)
 
     res_image = cv2.cvtColor(flipped_rgb, cv2.COLOR_RGB2BGR)
     cv2.imshow("Hands", res_image)
