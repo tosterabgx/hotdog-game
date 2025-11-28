@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
-from gesturer import is_correct_gesture
+from recognizer import is_correct_gesture
 
 handsDetector = mp.solutions.hands.Hands(
     static_image_mode=False, max_num_hands=2, min_detection_confidence=0.5
