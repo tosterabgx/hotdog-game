@@ -47,4 +47,4 @@ def is_mouth_open(face):
     mouth_size = abs(lm[upper_lip_bottom].y - lm[bottom_lip_top].y)
 
     ratio = upper_lip_size / (mouth_size + 1e-6)
-    return ratio < 0.975
+    return ratio < 1.5

@@ -17,6 +17,8 @@ face_detector = mp.solutions.face_mesh.FaceMesh(
 
 cap = cv2.VideoCapture(0)
 
+open_mouth_confidence = 0
+
 while cap.isOpened():
     ret, frame = cap.read()
 
@@ -41,6 +43,11 @@ while cap.isOpened():
         #            radius=3, color=(255, 0, 0))
 
         if is_mouth_open(face):
+            open_mouth_confidence = min(100, open_mouth_confidence + 5)
+        else:
+            open_mouth_confidence = max(0, open_mouth_confidence - 5)
+
+        if open_mouth_confidence > 50:
             cv2.putText(flipped_rgb,
                         "Mouth open",
                         (10, 100),
