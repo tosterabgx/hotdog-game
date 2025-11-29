@@ -9,15 +9,18 @@ def get_points(landmark, shape):
     return np.array(points, dtype=np.int32)
 
 
-def insert_image_in_hand(bg, img, hand):
+def insert_image_in_hand(bg, img, hand, is_left=False):
     img = img.copy()
     (x, y), r = cv2.minEnclosingCircle(get_points(hand.landmark, bg.shape))
 
-    dd = int(max(1, int(r * 2)) * 0.9)
+    dd = int(max(1, int(r * 2)) * 0.8)
     img = cv2.resize(img, (int(img.shape[1] / img.shape[0] * dd), dd))
 
     x -= img.shape[1] / 2
     y -= img.shape[0] / 2
+
+    if is_left:
+        img = np.fliplr(img)
 
     return insert_image(bg, img, int(x), int(y))
 

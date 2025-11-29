@@ -23,10 +23,17 @@ def are_fingers_closed(lm):
         and is_finger_closed(lm, 0, 16) \
         and is_finger_closed(lm, 0, 12)
 
+def is_front(lm, is_left):
+    thumb_pos = lm[4].x
+    pinky_pos = lm[20].x
+    if is_left:
+        return thumb_pos > pinky_pos
+    return thumb_pos < pinky_pos
 
-def is_correct_gesture(hand):
+
+def is_correct_gesture(hand, is_left):
     lm = hand.landmark
-    return is_finger_closed(lm, 4, 8, True) and are_fingers_closed(lm)
+    return is_finger_closed(lm, 4, 8, True) and are_fingers_closed(lm) and is_front(lm, is_left)
 
 
 def is_mouth_open(face):

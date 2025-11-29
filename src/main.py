@@ -27,7 +27,8 @@ while cap.isOpened():
     flipped_rgb = cv2.cvtColor(flipped, cv2.COLOR_BGR2RGB)
 
     faces = face_detector.process(flipped_rgb).multi_face_landmarks
-    hands = hands_detector.process(flipped_rgb).multi_hand_landmarks
+    hands_result = hands_detector.process(flipped_rgb)
+    hands = hands_result.multi_hand_landmarks
 
     if faces:
         face = faces[0]
@@ -49,11 +50,13 @@ while cap.isOpened():
                         2)
 
     if hands:
-        for hand in hands:
+        for hand, hand_info in zip(hands, hands_result.multi_handedness):
+            is_left = "Left" in str(hand_info)
+
             # mp.solutions.drawing_utils.draw_landmarks(flipped_rgb, hand, mp.solutions.hands.HAND_CONNECTIONS)
 
-            if is_correct_gesture(hand):
-                flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_image, hand)
+            if is_correct_gesture(hand, is_left):
+                flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_image, hand, is_left)
 
     res_image = cv2.cvtColor(flipped_rgb, cv2.COLOR_RGB2BGR)
     cv2.imshow("Hands", res_image)
