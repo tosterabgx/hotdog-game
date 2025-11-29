@@ -3,7 +3,7 @@
 - [x] Recognize correct gestures
     - [ ] Do it consistently
 - [x] Recognize open mouth
-- [ ] Put hotdogs in hands (DEADLINE: 05-12-2025)
+- [x] Put hotdogs in hands (DEADLINE: 05-12-2025)
 - [ ] Make hotdogs edible (DEADLINE: 05-12-2025)
 - [ ] Add multiple players mode
 - [ ] Add scoreboard
@@ -25,4 +25,4 @@ Added CHANGELOG.md + 3D tracking for index finger + mouth recognition
 
 ### 29-11-2025
 
-Added hotdogs in hands when they have correct gesture
+Added hotdogs in hands when they have correct gesture. Left hand has flipped hotdog.
