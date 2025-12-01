@@ -26,3 +26,7 @@ Added CHANGELOG.md + 3D tracking for index finger + mouth recognition
 ### 29-11-2025
 
 Added hotdogs in hands when they have correct gesture. Left hand has flipped hotdog.
+
+### 01-12-2025
+
+Debug circles around ROIs such as mouth and hands.

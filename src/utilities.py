@@ -9,11 +9,17 @@ def get_points(landmark, shape):
     return np.array(points, dtype=np.int32)
 
 
+def find_circle(landmarks, shape, multiplier=1.0):
+    (x, y), r = cv2.minEnclosingCircle(get_points(landmarks, shape))
+
+    return (x, y), r * multiplier
+
+
 def insert_image_in_hand(bg, img, hand, is_left=False):
     img = img.copy()
-    (x, y), r = cv2.minEnclosingCircle(get_points(hand.landmark, bg.shape))
+    (x, y), r = find_circle(hand.landmark, bg.shape, 0.8)
 
-    dd = int(max(1, int(r * 2)) * 0.8)
+    dd = max(1, int(r * 2))
     img = cv2.resize(img, (int(img.shape[1] / img.shape[0] * dd), dd))
 
     x -= img.shape[1] / 2
