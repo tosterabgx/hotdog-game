@@ -8,9 +8,13 @@ from recognizer import is_correct_gesture, is_mouth_open
 from utilities import insert_image_in_hand, find_circle
 
 hotdog_path = Path(__file__).parent.parent / "assets" / "hotdog.png"
+hotdog_eaten_path = Path(__file__).parent.parent / "assets" / "hotdog_eaten.png"
 
 hotdog_image = cv2.imread(str(hotdog_path), cv2.IMREAD_UNCHANGED)
 hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
+
+hotdog_eaten_image = cv2.imread(str(hotdog_eaten_path), cv2.IMREAD_UNCHANGED)
+hotdog_eaten_image = cv2.cvtColor(hotdog_eaten_image, cv2.COLOR_BGRA2RGBA)
 
 hands_detector = mp.solutions.hands.Hands(
     static_image_mode=False, max_num_hands=2, min_detection_confidence=0.5
@@ -24,6 +28,8 @@ cap = cv2.VideoCapture(0)
 open_mouth_confidence = 0
 
 cooldown = [False, False]
+hands_states = [0, 0]
+score = 0
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -48,7 +54,7 @@ while cap.isOpened():
             open_mouth_confidence = max(0, open_mouth_confidence - 5)
 
         if open_mouth_confidence > 50:
-            (x_mouth, y_mouth), r_mouth = find_circle((lm[0], lm[17]), flipped_rgb.shape, 1.5)
+            (x_mouth, y_mouth), r_mouth = find_circle((lm[0], lm[17]), flipped_rgb.shape, 2)
 
             cv2.circle(img=flipped_rgb, center=(int(x_mouth), int(y_mouth)), radius=int(r_mouth), color=(255, 0, 0))
     else:
@@ -64,8 +70,10 @@ while cap.isOpened():
                 i = 1
 
             if is_correct_gesture(hand, is_left):
-                if not cooldown[i]:
+                if hands_states[i] == 0 and not cooldown[i]:
                     flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_image, hand, is_left)
+                elif hands_states[i] == 1:
+                    flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_eaten_image, hand, is_left)
 
                 (x, y), r = find_circle(hand.landmark, flipped_rgb.shape, 1.25)
                 cv2.circle(img=flipped_rgb, center=(int(x), int(y)), radius=int(r), color=(255, 0, 0))
@@ -78,10 +86,18 @@ while cap.isOpened():
 
                     if dd_hand_mouth < r + r_mouth:
                         if not cooldown[i]:
-                            print(f"ate hotdog ({i})")
+                            hands_states[i] = (hands_states[i] + 1) % 2
                             cooldown[i] = True
+
+                            score += 1
+
+                            print(f"ate hotdog ({i})")
                     else:
                         cooldown[i] = False
+                else:
+                    cooldown[i] = False
+
+    cv2.putText(flipped_rgb, f"I ate {score} hotdog(s)", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), thickness=2)
 
     res_image = cv2.cvtColor(flipped_rgb, cv2.COLOR_RGB2BGR)
     cv2.imshow("Hands", res_image)

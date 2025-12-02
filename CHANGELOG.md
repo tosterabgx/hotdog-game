@@ -4,7 +4,7 @@
     - [ ] Do it consistently
 - [x] Recognize open mouth
 - [x] Put hotdogs in hands (DEADLINE: 05-12-2025)
-- [ ] Make hotdogs edible (DEADLINE: 05-12-2025)
+- [x] Make hotdogs edible (DEADLINE: 05-12-2025)
 - [ ] Add multiple players mode
 - [ ] Add scoreboard
 - [ ] Add tutorial
@@ -30,3 +30,7 @@ Added hotdogs in hands when they have correct gesture. Left hand has flipped hot
 ### 01-12-2025
 
 Debug circles around ROIs such as mouth and hands.
+
+### 02-12-2025
+
+Now you can eat hotdogs! Also added half-eaten hotdogs
