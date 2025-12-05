@@ -7,7 +7,7 @@ from pathlib import Path
 from recognizer import is_correct_gesture, is_mouth_open
 from utilities import insert_image_in_hand, find_circle
 
-hotdog_path = Path(__file__).parent.parent / "assets" / "hotdog.png"
+hotdog_path = Path(__file__).parent.parent / "assets" / "durian.png"
 
 hotdog_image = cv2.imread(str(hotdog_path), cv2.IMREAD_UNCHANGED)
 hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
@@ -51,7 +51,9 @@ while cap.isOpened():
         if open_mouth_confidence > 50:
             (x_mouth, y_mouth), r_mouth = find_circle((lm[0], lm[17]), flipped_rgb.shape, 1.5)
 
-            cv2.circle(img=flipped_rgb, center=(int(x_mouth), int(y_mouth)), radius=int(r_mouth), color=(255, 0, 0))
+            cv2.putText(flipped_rgb, "MOUTH OPEN", (10, flipped_rgb.shape[0] - 30), cv2.QT_FONT_NORMAL, 2, (0, 255, 0),
+                        thickness=2)
+            # cv2.circle(img=flipped_rgb, center=(int(x_mouth), int(y_mouth)), radius=int(r_mouth), color=(255, 0, 0))
     else:
         open_mouth_confidence = max(0, open_mouth_confidence - 5)
 
