@@ -7,7 +7,7 @@ from pathlib import Path
 from recognizer import is_correct_gesture, is_mouth_open
 from utilities import insert_image_in_hand, find_circle
 
-hotdog_path = Path(__file__).parent.parent / "assets" / "durian.png"
+hotdog_path = Path(__file__).parent.parent / "assets" / "hotdog.png"
 
 hotdog_image = cv2.imread(str(hotdog_path), cv2.IMREAD_UNCHANGED)
 hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
