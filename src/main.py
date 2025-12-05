@@ -16,7 +16,7 @@ hands_detector = mp.solutions.hands.Hands(
     static_image_mode=False, max_num_hands=2, min_detection_confidence=0.5
 )
 face_detector = mp.solutions.face_mesh.FaceMesh(
-    max_num_faces=1, min_detection_confidence=0.5
+    static_image_mode=False, max_num_faces=1, min_detection_confidence=0.5
 )
 
 cap = cv2.VideoCapture(0)
@@ -49,7 +49,7 @@ while cap.isOpened():
             open_mouth_confidence = max(0, open_mouth_confidence - 5)
 
         if open_mouth_confidence > 50:
-            (x_mouth, y_mouth), r_mouth = find_circle((lm[0], lm[17]), flipped_rgb.shape, 2)
+            (x_mouth, y_mouth), r_mouth = find_circle((lm[0], lm[17]), flipped_rgb.shape, 1.5)
 
             cv2.circle(img=flipped_rgb, center=(int(x_mouth), int(y_mouth)), radius=int(r_mouth), color=(255, 0, 0))
     else:
@@ -69,7 +69,7 @@ while cap.isOpened():
                     flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_image, hand, is_left)
 
                 (x, y), r = find_circle(hand.landmark, flipped_rgb.shape, 1.25)
-                cv2.circle(img=flipped_rgb, center=(int(x), int(y)), radius=int(r), color=(255, 0, 0))
+                # cv2.circle(img=flipped_rgb, center=(int(x), int(y)), radius=int(r), color=(255, 0, 0))
 
                 if faces and open_mouth_confidence > 50:
                     hand_pos = np.array([x, y])
@@ -82,14 +82,21 @@ while cap.isOpened():
                             cooldown[i] = True
 
                             score += 1
-                                
+
                             print(f"ate hotdog ({i})")
                     else:
                         cooldown[i] = False
                 else:
                     cooldown[i] = False
 
-    cv2.putText(flipped_rgb, f"I ate {score} hotdog(s)", (10, 50), cv2.QT_FONT_NORMAL, 2, (0, 0, 0), thickness=2)
+    if score == 0:
+        text = "Start eating hotdogs!"
+    elif score == 1:
+        text = f"You ate {score} hotdog"
+    else:
+        text = f"You ate {score} hotdogs"
+
+    cv2.putText(flipped_rgb, text, (10, 50), cv2.QT_FONT_NORMAL, 2, (0, 0, 0), thickness=2)
 
     res_image = cv2.cvtColor(flipped_rgb, cv2.COLOR_RGB2BGR)
     cv2.imshow("Hands", res_image)

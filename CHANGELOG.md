@@ -34,3 +34,6 @@ Debug circles around ROIs such as mouth and hands.
 ### 02-12-2025
 
 Now you can eat hotdogs! Also added half-eaten hotdogs
+
+### 05-12-2025
+Remove half-eaten hotdogs because of bad feedback. Some better eating tracking.
