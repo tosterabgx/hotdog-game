@@ -2,6 +2,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
+from time import time
+
 from pathlib import Path
 
 from recognizer import is_correct_gesture, is_mouth_open
@@ -25,6 +27,9 @@ open_mouth_confidence = 0
 
 cooldown = [False, False]
 score = 0
+start_time = 0
+max_time = 15
+timer = 0
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -80,7 +85,7 @@ while cap.isOpened():
                     dd_hand_mouth = np.linalg.norm(hand_pos - mouth_pos)
 
                     if dd_hand_mouth < r + r_mouth:
-                        if not cooldown[i]:
+                        if not cooldown[i] and timer > 0:
                             cooldown[i] = True
 
                             score += 1
@@ -92,13 +97,18 @@ while cap.isOpened():
                     cooldown[i] = False
 
     if score == 0:
-        text = "Start eating hotdogs!"
-    elif score == 1:
-        text = f"You ate {score} hotdog"
-    else:
-        text = f"You ate {score} hotdogs"
+        text = "Start eating hotdogs"
 
-    cv2.putText(flipped_rgb, text, (10, 50), cv2.QT_FONT_NORMAL, 2, (0, 0, 0), thickness=2)
+        start_time = time()
+    elif score == 1:
+        text = f"{score} hotdog ({timer} seconds left)"
+    else:
+        text = f"{score} hotdogs ({timer} seconds left)"
+
+
+    timer = max_time - min(max_time, int(time() - start_time))
+
+    cv2.putText(flipped_rgb, text, (10, 50), cv2.QT_FONT_NORMAL, 1, (0, 0, 0), thickness=2)
 
     res_image = cv2.cvtColor(flipped_rgb, cv2.COLOR_RGB2BGR)
     cv2.imshow("Hands", res_image)
