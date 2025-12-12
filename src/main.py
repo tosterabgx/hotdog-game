@@ -22,6 +22,8 @@ face_detector = mp.solutions.face_mesh.FaceMesh(
 )
 
 cap = cv2.VideoCapture(0)
+cap.set(3, 1920)  # Width
+cap.set(4, 1080)  # Length
 
 open_mouth_confidence = 0
 
@@ -34,8 +36,13 @@ timer = 0
 while cap.isOpened():
     ret, frame = cap.read()
 
-    if cv2.waitKey(1) & 0xFF == ord("q") or not ret:
+    key_pressed = cv2.waitKey(1)
+    if key_pressed & 0xFF == ord("q") or not ret:
         break
+
+    if key_pressed & 0xFF == ord("r"):
+        timer = 0
+        score = 0
 
     flipped = np.fliplr(frame)
     flipped_rgb = cv2.cvtColor(flipped, cv2.COLOR_BGR2RGB)
@@ -58,7 +65,6 @@ while cap.isOpened():
 
             cv2.putText(flipped_rgb, "MOUTH OPEN", (10, flipped_rgb.shape[0] - 30), cv2.QT_FONT_NORMAL, 2, (0, 255, 0),
                         thickness=2)
-            # cv2.circle(img=flipped_rgb, center=(int(x_mouth), int(y_mouth)), radius=int(r_mouth), color=(255, 0, 0))
     else:
         open_mouth_confidence = max(0, open_mouth_confidence - 5)
 
@@ -76,8 +82,6 @@ while cap.isOpened():
                     flipped_rgb = insert_image_in_hand(flipped_rgb, hotdog_image, hand, is_left)
 
                 (x, y), r = find_circle(hand.landmark, flipped_rgb.shape, 1.25)
-                # cv2.circle(img=flipped_rgb, center=(int(x), int(y)), radius=int(r), color=(255, 0, 0))
-
                 if faces and open_mouth_confidence > 50:
                     hand_pos = np.array([x, y])
                     mouth_pos = np.array([x_mouth, y_mouth])
@@ -89,8 +93,6 @@ while cap.isOpened():
                             cooldown[i] = True
 
                             score += 1
-
-                            print(f"ate hotdog ({i})")
                     else:
                         cooldown[i] = False
                 else:
@@ -105,12 +107,11 @@ while cap.isOpened():
     else:
         text = f"{score} hotdogs ({timer} seconds left)"
 
-
     timer = max_time - min(max_time, int(time() - start_time))
 
     cv2.putText(flipped_rgb, text, (10, 50), cv2.QT_FONT_NORMAL, 1, (0, 0, 0), thickness=2)
 
     res_image = cv2.cvtColor(flipped_rgb, cv2.COLOR_RGB2BGR)
-    cv2.imshow("Hands", res_image)
+    cv2.imshow("Hotdogs", res_image)
 
 hands_detector.close()
