@@ -15,7 +15,7 @@ def is_finger_closed(lm, origin_id, finger_tip_id, use_3d=False):
     d_origin_crease = np.linalg.norm(crease - origin)
 
     ratio = d_origin_tip / (d_origin_crease + 1e-6)
-    return ratio < 0.975
+    return ratio < 1
 
 
 def are_fingers_closed(lm):
