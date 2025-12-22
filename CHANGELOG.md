@@ -5,8 +5,8 @@
 - [x] Recognize open mouth
 - [x] Put hotdogs in hands (DEADLINE: 05-12-2025)
 - [x] Make hotdogs edible (DEADLINE: 05-12-2025)
-- [ ] Add multiple players mode
-- [ ] Add scoreboard
+- [x] Add multiple players mode
+- [x] Add scoreboard
 - [ ] Add tutorial
 
 ## Changelog
@@ -36,4 +36,21 @@ Debug circles around ROIs such as mouth and hands.
 Now you can eat hotdogs! Also added half-eaten hotdogs
 
 ### 05-12-2025
+
 Remove half-eaten hotdogs because of bad feedback. Some better eating tracking.
+
+### 10-12-2025
+
+Added better hand tracking + started doing ui
+
+### 19-12-2025
+
+Multiple players mode added + scoreboard
+
+### 21-12-2025
+
+Added ui using pygame
+
+### 22-12-2025
+
+Polished UI
