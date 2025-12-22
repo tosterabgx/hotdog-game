@@ -53,4 +53,4 @@ Added ui using pygame
 
 ### 22-12-2025
 
-Polished UI
+Polished UI + added tutorial
