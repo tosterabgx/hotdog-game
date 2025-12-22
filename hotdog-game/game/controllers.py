@@ -3,9 +3,8 @@ import os
 import game.states as states
 import pygame
 
-import cv2
+from pathlib import Path
 import mediapipe as mp
-import numpy as np
 
 
 class VisualManager:
@@ -51,23 +50,9 @@ class VisualManager:
         if fill_w > 0:
             self.draw_rectangle(topleft, fill_w, height, color)
 
-    def draw_hp_bar(
-            self,
-            topleft: tuple[int, int],
-            width: int,
-            height: int,
-            hp: int,
-            max_hp: int = 100,
-    ) -> None:
-        hp = max(0, min(hp, max_hp))
-        ratio = 0 if max_hp <= 0 else hp / max_hp
-        fill_color = (255 - int(255 * ratio), int(255 * ratio), 0)
-
-        self.draw_bar(topleft, width, height, fill_color, hp, max_hp)
-
     def load_image(self, filename: str, size: tuple):
-        path = os.path.join("assets", "images", filename)
-        im = pygame.image.load(path).convert_alpha()
+        path = Path(__file__).parent.parent / "assets" / "images" / filename
+        im = pygame.image.load(str(path)).convert_alpha()
         return pygame.transform.scale(im, size)
 
     def draw_image(self, pos: tuple[int, int], im) -> None:
@@ -101,6 +86,7 @@ class GameManager:
         self._states = {
             "menu": states.MainMenuState(self),
             "eating": states.EatingState(self),
+            "help": states.HelpState(self),
         }
 
         self.state = "menu"

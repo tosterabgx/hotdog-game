@@ -5,6 +5,8 @@ import pygame
 from game.config import *
 from game.misc import Button
 
+from pathlib import Path
+
 from time import time
 
 import numpy as np
@@ -112,7 +114,7 @@ class EatingState(GameState):
         self.cap = None
         self.frame = None
 
-        hotdog_image = cv2.imread(os.path.join("assets", "images", "hotdog.png"), cv2.IMREAD_UNCHANGED)
+        hotdog_image = cv2.imread(Path(__file__).parent.parent / "assets" / "images" / "hotdog.png", cv2.IMREAD_UNCHANGED)
         self.hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
 
         self.open_mouth_confidence = 0
@@ -297,3 +299,61 @@ class EatingState(GameState):
                 COLOR_TEXT_SECONDARY,
                 font_size=20
             )
+
+class HelpState(GameState):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.good_image = self.vm.load_image("tutorial_good.png", (150, 150))
+        self.bad1_image = self.vm.load_image("tutorial_bad1.png", (150, 150))
+        self.bad2_image = self.vm.load_image("tutorial_bad2.png", (150, 150))
+        self.bad3_image = self.vm.load_image("tutorial_bad3.png", (150, 150))
+
+    def enter(self) -> None:
+        pass
+
+    def handle_event(self, event: pygame.event.Event) -> None:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.game.state = "menu"
+
+    def update(self) -> None:
+        pass
+
+    def draw(self) -> None:
+        self.vm.clear_screen(COLOR_BG_MENU)
+        #
+        # title = "How to play"
+        # tw, th = self.vm.get_text_size(title, font_size=90)
+        # self.vm.draw_text(((SCREEN_WIDTH - tw) // 2, 30), title, COLOR_TEXT_PRIMARY, font_size=90)
+        #
+        # img_w, img_h = 300, 300
+        # gap = 40
+        # images = [
+        #     (self.good_image, "Correct hand gesture"),
+        #     (self.bad1_image, "Fist is incorrect gesture"),
+        #     (self.bad2_image, "Incorrect side of a hand"),
+        #     (self.bad3_image, "Incorrect gesture"),
+        # ]
+        #
+        # total_w = len(images) * img_w + (len(images) - 1) * gap
+        # start_x = (SCREEN_WIDTH - total_w) // 2
+        # y_img = 180
+        # y_text = y_img + img_h + 10
+        #
+        # for i, (img, text, color) in enumerate(images):
+        #     x = start_x + i * (img_w + gap)
+        #
+        #     # Image
+        #     self.vm.draw_image((x, y_img), img)
+        #
+        #         self.vm.draw_text((x, yy),
+        #                           line,
+        #                           color if j == 0 else COLOR_TEXT_SECONDARY,
+        #                           font_size=24 if j > 0 else 28)
+        #         yy += 26
+        #
+        # footer = "Press ESC to return to menu"
+        # twf, thf = self.vm.get_text_size(footer, font_size=22)
+        # self.vm.draw_text(((SCREEN_WIDTH - twf) // 2,
+        #                    SCREEN_HEIGHT - thf - 12),
+        #                   footer, COLOR_TEXT_SECONDARY, font_size=22)
