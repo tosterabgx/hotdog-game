@@ -7,7 +7,7 @@
 - [x] Make hotdogs edible (DEADLINE: 05-12-2025)
 - [x] Add multiple players mode
 - [x] Add scoreboard
-- [ ] Add tutorial
+- [x] Add tutorial
 
 ## Changelog
 
@@ -54,3 +54,7 @@ Added ui using pygame
 ### 22-12-2025
 
 Polished UI + added tutorial
+
+### 23-12-2025
+
+Fixed bug after restarting the game

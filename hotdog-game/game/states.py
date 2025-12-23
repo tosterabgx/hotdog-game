@@ -114,19 +114,17 @@ class EatingState(GameState):
         self.cap = None
         self.frame = None
 
-        hotdog_image = cv2.imread(Path(__file__).parent.parent / "assets" / "images" / "hotdog.png", cv2.IMREAD_UNCHANGED)
+        hotdog_image = cv2.imread(str(Path(__file__).parent.parent / "assets" / "images" / "hotdog.png"),
+                                  cv2.IMREAD_UNCHANGED)
         self.hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
-
-        self.open_mouth_confidence = 0
 
         self.max_time = 10
 
-        self._reset_states()
-
-        self.state = "eating"  # "eating" or "interlude" or "results"
         self.player_id = 0
-
         self.results = []
+
+        self._reset_states()
+        self.state = "eating"  # "eating" or "interlude" or "results"
 
     def _reset_states(self):
         self.cooldown = [False, False]
@@ -134,7 +132,16 @@ class EatingState(GameState):
         self.start_time = -1
         self.timer = -1
 
+        self.open_mouth_confidence = 0
+
     def enter(self):
+        self._reset_states()
+
+        self.player_id = 0
+        self.results = []
+
+        self.state = "eating"
+
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 960)
         self.cap.set(4, 540)
@@ -145,7 +152,9 @@ class EatingState(GameState):
                 self.state = "eating"
             elif event.key == pygame.K_RETURN:
                 self.state = "results"
-        elif self.state == "results" and event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        elif self.state == "results" and event.type == pygame.KEYDOWN and (
+                event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN):
+            self.cap.release()
             self.game.state = "menu"
 
     def update(self) -> None:
@@ -299,6 +308,7 @@ class EatingState(GameState):
                 COLOR_TEXT_SECONDARY,
                 font_size=20
             )
+
 
 class HelpState(GameState):
     def __init__(self, *args, **kwargs) -> None:
