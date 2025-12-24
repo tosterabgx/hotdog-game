@@ -118,10 +118,9 @@ class EatingState(GameState):
                                   cv2.IMREAD_UNCHANGED)
         self.hotdog_image = cv2.cvtColor(hotdog_image, cv2.COLOR_BGRA2RGBA)
 
-        self.max_time = 10
-
         self.player_id = 0
         self.results = []
+        self.pictures = []
 
         self._reset_states()
         self.state = "eating"  # "eating" or "interlude" or "results"
@@ -139,10 +138,11 @@ class EatingState(GameState):
 
         self.player_id = 0
         self.results = []
+        self.pictures = []
 
         self.state = "eating"
 
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(CAMERA_ID)
         self.cap.set(3, 960)
         self.cap.set(4, 540)
 
@@ -169,7 +169,10 @@ class EatingState(GameState):
         if self.state != "eating":
             return
 
-        _, frame = self.cap.read()
+        ret, frame = self.cap.read()
+
+        if not ret:
+            return
 
         flipped = np.fliplr(frame)
         flipped_rgb = cv2.cvtColor(flipped, cv2.COLOR_BGR2RGB)
@@ -221,6 +224,9 @@ class EatingState(GameState):
                                 self.cooldown[i] = True
 
                                 self.score += 1
+
+                                if self.score == 1:
+                                    self.pictures.append(self.frame)
                         else:
                             self.cooldown[i] = False
                     else:
@@ -235,9 +241,9 @@ class EatingState(GameState):
         else:
             text = f"{self.score} hotdogs ({self.timer} seconds left) - Player #{self.player_id}"
 
-        self.timer = self.max_time - min(self.max_time, int(time() - self.start_time))
+        self.timer = ROUND_TIME - min(ROUND_TIME, int(time() - self.start_time))
 
-        cv2.putText(flipped_rgb, text, (10, 50), cv2.QT_FONT_NORMAL, 1, (0, 0, 0), thickness=2)
+        cv2.putText(flipped_rgb, text, (20, 50), cv2.QT_FONT_NORMAL, 1, COLOR_TEXT_TITLE, thickness=2)
 
         self.frame = flipped_rgb
 
@@ -262,7 +268,7 @@ class EatingState(GameState):
             self.vm.draw_text(
                 ((SCREEN_WIDTH - tw1) // 2, (SCREEN_HEIGHT - th1 - 75) // 2),
                 t1,
-                COLOR_TEXT_PRIMARY,
+                COLOR_TEXT_TITLE,
                 font_size=100,
             )
 
@@ -282,22 +288,34 @@ class EatingState(GameState):
 
         elif self.state == "results":
             scoreboard = list(enumerate(self.results))
-
             scoreboard.sort(key=lambda x: (-x[1], x[0]))
 
             title = "Results"
             tw, th = self.vm.get_text_size(title, font_size=110)
-            self.vm.draw_text(((SCREEN_WIDTH - tw) // 2, 70), title, COLOR_TEXT_PRIMARY, font_size=110)
+            self.vm.draw_text(((SCREEN_WIDTH - tw) // 2, 70), title, COLOR_TEXT_TITLE, font_size=110)
 
             start_y = 220
-            line_h = 55
+            line_h = 100
             font_size = 48
 
+            thumb_w, thumb_h = 160, 90
+
             for rank, (pid, score) in enumerate(scoreboard, start=1):
+                y = start_y + (rank - 1) * line_h
+
                 line = f"{rank}) Player #{pid} - {score}"
                 twl, thl = self.vm.get_text_size(line, font_size=font_size)
-                self.vm.draw_text(((SCREEN_WIDTH - twl) // 2, start_y + (rank - 1) * line_h),
-                                  line, COLOR_TEXT_PRIMARY, font_size=font_size)
+
+                x_text = (SCREEN_WIDTH - twl) // 2 + thumb_w // 2
+                self.vm.draw_text((x_text, y), line, COLOR_TEXT_PRIMARY, font_size=font_size)
+
+                rgb = self.pictures[pid]
+                surf = pygame.image.frombuffer(rgb.tobytes(), rgb.shape[1::-1], "RGB")
+                surf = pygame.transform.smoothscale(surf, (thumb_w, thumb_h))
+
+                x_img = x_text - thumb_w - 20
+                y_img = y - (thumb_h - thl) // 2
+                self.vm.draw_image((x_img, y_img), surf)
 
             t = "Press ESC to return to menu"
             tw, th = self.vm.get_text_size(t, font_size=20)
@@ -334,7 +352,7 @@ class HelpState(GameState):
 
         title = "How to play"
         tw, th = self.vm.get_text_size(title, font_size=90)
-        self.vm.draw_text(((SCREEN_WIDTH - tw) // 2, 50), title, COLOR_TEXT_PRIMARY, font_size=90)
+        self.vm.draw_text(((SCREEN_WIDTH - tw) // 2, 50), title, COLOR_TEXT_TITLE, font_size=90)
 
         total_w = 4 * 150 + 3 * 50
         start_x = (SCREEN_WIDTH - total_w) // 2
@@ -358,5 +376,5 @@ class HelpState(GameState):
         footer = "Press ESC to return to menu"
         twf, thf = self.vm.get_text_size(footer, font_size=22)
         self.vm.draw_text(((SCREEN_WIDTH - twf) // 2,
-                           SCREEN_HEIGHT - thf - 12),
+                           SCREEN_HEIGHT - thf - 10),
                           footer, COLOR_TEXT_SECONDARY, font_size=22)
