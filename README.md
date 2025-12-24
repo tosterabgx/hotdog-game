@@ -19,7 +19,7 @@ Game for a party - who eats more hotdogs
    ```
 3. Install required packages
    ```sh
-   pip install -r requirements.txt
+   pip install mediapipe==0.10.21 opencv-python pygame
    ```
 4. Run the game
    ```sh
