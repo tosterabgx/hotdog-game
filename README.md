@@ -2,9 +2,7 @@
 
 **Snapchat-like game made using opencv and mediapipe 🌭**
 
-Game for a party - who eats more hotdogs?
-
-> Work in progress
+Game for a party - who eats more hotdogs
 
 ## Installation & Usage
 
@@ -25,6 +23,6 @@ Game for a party - who eats more hotdogs?
    ```
 4. Run the game
    ```sh
-   cd src
+   cd hotdog-game
    python main.py
    ```
